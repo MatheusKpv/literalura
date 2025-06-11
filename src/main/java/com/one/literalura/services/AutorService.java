@@ -1,6 +1,7 @@
 package com.one.literalura.services;
 
 import com.one.literalura.dto.AutorLivrosDTO;
+import com.one.literalura.dto.GutendexAutorDTO;
 import com.one.literalura.models.Autor;
 import com.one.literalura.models.Livro;
 import com.one.literalura.repositories.AutorRepository;
@@ -43,5 +44,16 @@ public class AutorService {
                                 .toList()
                 ))
                 .toList();
+    }
+
+    public Autor buscarOuCadastrarAutor(final GutendexAutorDTO autorDTO) {
+        return autorRepository.findByNomeIgnoreCase(autorDTO.nome()).orElseGet(() -> {
+            final var autorToSave = Autor.builder()
+                    .nome(autorDTO.nome())
+                    .anoNascimento(Year.of(autorDTO.anoNascimento()))
+                    .anoDeMorte(Year.of(autorDTO.anoDeMorte()))
+                    .build();
+            return autorRepository.save(autorToSave);
+        });
     }
 }

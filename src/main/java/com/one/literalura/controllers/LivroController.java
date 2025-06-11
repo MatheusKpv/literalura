@@ -1,6 +1,9 @@
 package com.one.literalura.controllers;
 
+import com.one.literalura.cli.AutorView;
+import com.one.literalura.cli.IdiomaView;
 import com.one.literalura.cli.LivroView;
+import com.one.literalura.cli.MenuView;
 import com.one.literalura.enums.IdiomasEnum;
 import com.one.literalura.enums.OpcoesEnum;
 import com.one.literalura.services.AutorService;
@@ -18,41 +21,52 @@ public class LivroController {
     private final LivroService livroService;
     private final AutorService autorService;
     private final LivroView livroView;
+    private final AutorView autorView;
+    private final IdiomaView idiomaView;
+    private final MenuView menuView;
 
-    public LivroController(LivroService livroService, AutorService autorService, LivroView livroView) {
+    public LivroController(final LivroService livroService,
+                           final AutorService autorService,
+                           final LivroView livroView,
+                           final AutorView autorView,
+                           final IdiomaView idiomaView,
+                           final MenuView menuView) {
         this.livroService = livroService;
         this.autorService = autorService;
         this.livroView = livroView;
+        this.autorView = autorView;
+        this.idiomaView = idiomaView;
+        this.menuView = menuView;
     }
 
     public void iniciar() {
         var numOpcao = 0;
 
         do {
-            numOpcao = lerInteger(livroView.getMessageOpcoes());
-
+            numOpcao = lerInteger(menuView.getMessageOpcoes());
             final var opcao = OpcoesEnum.getOpcao(numOpcao);
-            if (opcao != null) {
+
+            if (Objects.nonNull(opcao)) {
                 switch (opcao) {
                     case BUSCAR_LIVRO_POR_TITULO -> {
-                        final var titulo = lerString("Insira o nome do livro que você deseja procurar: ");
-                        livroService.buscarLivroPorTitulo(titulo);
+                        final var titulo = livroView.lerTitulo();
+                        livroService.buscarESalvarLivrosPorTitulo(titulo);
                         livroView.getMessageLivrosSalvos();
                     }
                     case LISTAR_LIVROS_REGISTRADOS -> {
                         livroView.getMessageLivrosRegistrados(livroService.buscarLivrosRegistrados());
                     }
                     case LISTAR_AUTORES_REGISTRADOS -> {
-                        livroView.getMessageAutoresRegistrados(autorService.buscarAutoresRegistrados());
+                        autorView.getMessageAutoresRegistrados(autorService.buscarAutoresRegistrados());
                     }
                     case LISTAR_AUTORES_VIVOS_EM_DETERMINADO_ANO -> {
                         final var ano = Year.of(lerInteger("Insira o ano desejado: "));
-                        livroView.getMessageAutoresVivosEmDeterminadoAno(autorService.buscarAutoresVivosEmDeterminadoAno(ano), ano);
+                        autorView.getMessageAutoresVivosEmDeterminadoAno(autorService.buscarAutoresVivosEmDeterminadoAno(ano), ano);
                     }
                     case LISTAR_LIVROS_EM_DETERMINADO_IDIOMA -> {
                         IdiomasEnum idioma;
                         do {
-                            idioma = IdiomasEnum.getOpcaoByAbreviacao(lerString(livroView.getMessageOpcoesIdiomas()));
+                            idioma = IdiomasEnum.getOpcaoByAbreviacao(lerString(idiomaView.getMessageOpcoesIdiomas()));
                         } while (Objects.isNull(idioma));
 
                         livroView.getMessageLivrosEmDeterminadoIdioma(livroService.buscarLivrosEmDeterminadoIdioma(idioma));
