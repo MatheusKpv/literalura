@@ -22,10 +22,17 @@ public class LivroService {
 
     private final LivroRepository livroRepository;
     private final AutorService autorService;
+    private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
 
-    public LivroService(LivroRepository livroRepository, AutorService autorService) {
+    public LivroService(final LivroRepository livroRepository,
+                        final AutorService autorService,
+                        final HttpClient httpClient,
+                        final ObjectMapper objectMapper) {
         this.livroRepository = livroRepository;
         this.autorService = autorService;
+        this.httpClient = httpClient;
+        this.objectMapper = objectMapper;
     }
 
     public void buscarESalvarLivrosPorTitulo(final String titulo) {
@@ -47,20 +54,17 @@ public class LivroService {
     }
 
     private List<GutendexLivroDTO> buscarLivrosDaAPI(final String titulo) throws URISyntaxException, IOException, InterruptedException {
-        final var client = HttpClient.newHttpClient();
-
         final var urlBusca = "https://gutendex.com/books/?search=" + formatSearch(titulo);
         final var request = HttpRequest.newBuilder()
                 .uri(new URI(urlBusca))
                 .GET()
                 .build();
 
-        final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        final var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        final var mapper = new ObjectMapper();
-        final var resultsNode = mapper.readTree(response.body()).get("results");
+        final var resultsNode = objectMapper.readTree(response.body()).get("results");
 
-        return mapper.readValue(resultsNode.toString(), new TypeReference<List<GutendexLivroDTO>>() {
+        return objectMapper.readValue(resultsNode.toString(), new TypeReference<>() {
         });
     }
 
