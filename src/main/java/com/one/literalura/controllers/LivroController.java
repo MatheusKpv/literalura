@@ -4,17 +4,14 @@ import com.one.literalura.cli.AutorView;
 import com.one.literalura.cli.IdiomaView;
 import com.one.literalura.cli.LivroView;
 import com.one.literalura.cli.MenuView;
-import com.one.literalura.enums.IdiomasEnum;
 import com.one.literalura.enums.OpcoesEnum;
 import com.one.literalura.services.AutorService;
 import com.one.literalura.services.LivroService;
 import org.springframework.stereotype.Component;
 
-import java.time.Year;
 import java.util.Objects;
 
 import static com.one.literalura.util.InputHelper.lerInteger;
-import static com.one.literalura.util.InputHelper.lerString;
 
 @Component
 public class LivroController {
@@ -54,22 +51,22 @@ public class LivroController {
                         livroView.getMessageLivrosSalvos();
                     }
                     case LISTAR_LIVROS_REGISTRADOS -> {
-                        livroView.getMessageLivrosRegistrados(livroService.buscarLivrosRegistrados());
+                        final var livros = livroService.buscarLivrosRegistrados();
+                        livroView.mostrarLivros(livros);
                     }
                     case LISTAR_AUTORES_REGISTRADOS -> {
-                        autorView.getMessageAutoresRegistrados(autorService.buscarAutoresRegistrados());
+                        final var autor =  autorService.buscarAutoresRegistrados();
+                        autorView.mostrarAutores(autor);
                     }
                     case LISTAR_AUTORES_VIVOS_EM_DETERMINADO_ANO -> {
-                        final var ano = Year.of(lerInteger("Insira o ano desejado: "));
-                        autorView.getMessageAutoresVivosEmDeterminadoAno(autorService.buscarAutoresVivosEmDeterminadoAno(ano), ano);
+                        final var ano = autorView.lerAno();
+                        final var autoresVivos = autorService.buscarAutoresVivosEmDeterminadoAno(ano);
+                        autorView.mostrarAutoresVivos(autoresVivos, ano);
                     }
                     case LISTAR_LIVROS_EM_DETERMINADO_IDIOMA -> {
-                        IdiomasEnum idioma;
-                        do {
-                            idioma = IdiomasEnum.getOpcaoByAbreviacao(lerString(idiomaView.getMessageOpcoesIdiomas()));
-                        } while (Objects.isNull(idioma));
-
-                        livroView.getMessageLivrosEmDeterminadoIdioma(livroService.buscarLivrosEmDeterminadoIdioma(idioma));
+                        final var idioma = idiomaView.lerIdioma();
+                        final var livrosPorIdioma = livroService.buscarLivrosEmDeterminadoIdioma(idioma);
+                        livroView.mostrarLivrosPorIdioma(livrosPorIdioma);
                     }
                 }
             }

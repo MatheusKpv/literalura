@@ -13,7 +13,7 @@ public class LivroView {
         System.out.println("Livros salvos com sucesso!");
     }
 
-    public void getMessageLivrosRegistrados(final List<Livro> livros) {
+    public void mostrarLivros(final List<Livro> livros) {
         final var message = new StringBuilder();
         message.append("Livros registrados:").append("\n");
         livros.forEach(livro -> message.append(livro.toString()).append("\n"));
@@ -21,7 +21,7 @@ public class LivroView {
         System.out.println(message);
     }
 
-    public void getMessageLivrosEmDeterminadoIdioma(final List<Livro> livros) {
+    public void mostrarLivrosPorIdioma(final List<Livro> livros) {
         if (livros.isEmpty()) {
             System.out.println("Nenhum livro neste idioma encontrado!");
         } else {
