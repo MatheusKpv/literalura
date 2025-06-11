@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-import static com.one.literalura.util.InputHelper.lerInteger;
+import static com.one.literalura.cli.ConsoleInput.lerInteger;
 
 @Component
 public class LivroController {
@@ -47,8 +47,8 @@ public class LivroController {
                 switch (opcao) {
                     case BUSCAR_LIVRO_POR_TITULO -> {
                         final var titulo = livroView.lerTitulo();
-                        livroService.buscarESalvarLivrosPorTitulo(titulo);
-                        livroView.getMessageLivrosSalvos();
+                        final var livros = livroService.buscarESalvarLivrosPorTitulo(titulo);
+                        livroView.mostrarLivros(livros);
                     }
                     case LISTAR_LIVROS_REGISTRADOS -> {
                         final var livros = livroService.buscarLivrosRegistrados();

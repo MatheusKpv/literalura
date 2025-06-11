@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 public class MenuView {
     public String getMessageOpcoes() {
         final var message = new StringBuilder();
-        message.append("escolha o número de sua opção:").append("\n");
+        message.append("\n")
+                .append("escolha o número de sua opção:")
+                .append("\n");
 
         for (OpcoesEnum opcao : OpcoesEnum.values()) {
             message.append(opcao.getNumber()).append(" - ").append(opcao.getDescription()).append("\n");

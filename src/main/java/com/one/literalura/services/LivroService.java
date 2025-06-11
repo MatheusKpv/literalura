@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,14 +36,18 @@ public class LivroService {
         this.objectMapper = objectMapper;
     }
 
-    public void buscarESalvarLivrosPorTitulo(final String titulo) {
+    public List<Livro> buscarESalvarLivrosPorTitulo(final String titulo) {
         try {
             final var livrosDTO = buscarLivrosDaAPI(titulo);
+            final List<Livro> livrosSalvos = new ArrayList<>();
 
             for (final GutendexLivroDTO livroDTO : livrosDTO) {
                 final var autor = localizarOuSalvarAutor(livroDTO);
-                salvarLivroSeNaoExistir(livroDTO, autor);
+                final var livro = salvarLivroSeNaoExistir(livroDTO, autor);
+                livrosSalvos.add(livro);
             }
+
+            return livrosSalvos;
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar e salvar livros: " + e.getMessage(), e);
@@ -72,13 +77,12 @@ public class LivroService {
         return autorService.buscarOuCadastrarAutor(livroDTO.autores().getFirst());
     }
 
-    private void salvarLivroSeNaoExistir(final GutendexLivroDTO livroDTO, final Autor autor) {
-        final var existeLivro = livroRepository.findById(livroDTO.id()).isPresent();
-
-        if (!existeLivro) {
-            final var novoLivro = new Livro(livroDTO, autor);
-            livroRepository.save(novoLivro);
-        }
+    private Livro salvarLivroSeNaoExistir(final GutendexLivroDTO livroDTO, final Autor autor) {
+        return livroRepository.findById(livroDTO.id())
+                .orElseGet(() -> {
+                    Livro novoLivro = new Livro(livroDTO, autor);
+                    return livroRepository.save(novoLivro);
+                });
     }
 
     private String formatSearch(final String nomeLivro) {

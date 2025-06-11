@@ -5,14 +5,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.one.literalura.util.InputHelper.lerString;
+import static com.one.literalura.cli.ConsoleInput.lerString;
 
 @Component
 public class LivroView {
-    public void getMessageLivrosSalvos() {
-        System.out.println("Livros salvos com sucesso!");
-    }
-
     public void mostrarLivros(final List<Livro> livros) {
         final var message = new StringBuilder();
         message.append("Livros registrados:").append("\n");

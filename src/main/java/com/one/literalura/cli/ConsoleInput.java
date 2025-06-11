@@ -1,8 +1,8 @@
-package com.one.literalura.util;
+package com.one.literalura.cli;
 
 import java.util.Scanner;
 
-public class InputHelper {
+public class ConsoleInput {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static String lerString(final String mensagem) {
@@ -19,12 +19,7 @@ public class InputHelper {
             try {
                 return Integer.parseInt(entrada);
             } catch (Exception e) {
-                System.out.println("""
-                        Valor inválido. Por favor, digite um número válido. Exemplo: 2
-                        
-                        ----------------------------------------
-                        
-                        """);
+                System.out.println("Valor inválido. Por favor, digite um número válido. Exemplo: 2\n");
             }
         }
     }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class Principal implements CommandLineRunner {
     private final LivroController livroController;
 
-    public Principal(LivroController livroController) {
+    public Principal(final LivroController livroController) {
         this.livroController = livroController;
     }
 

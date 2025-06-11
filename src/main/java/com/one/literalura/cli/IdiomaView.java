@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-import static com.one.literalura.util.InputHelper.lerString;
+import static com.one.literalura.cli.ConsoleInput.lerString;
 
 @Component
 public class IdiomaView {
