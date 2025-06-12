@@ -72,5 +72,7 @@ public class LivroController {
             }
 
         } while (numOpcao != 0);
+
+        System.exit(0);
     }
 }

@@ -16,7 +16,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LivroService {
@@ -47,7 +49,7 @@ public class LivroService {
                 livrosSalvos.add(livro);
             }
 
-            return livrosSalvos;
+            return livrosSalvos.stream().distinct().toList();
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar e salvar livros: " + e.getMessage(), e);
@@ -78,7 +80,7 @@ public class LivroService {
     }
 
     private Livro salvarLivroSeNaoExistir(final GutendexLivroDTO livroDTO, final Autor autor) {
-        return livroRepository.findById(livroDTO.id())
+        return livroRepository.findByTitulo(livroDTO.titulo())
                 .orElseGet(() -> {
                     Livro novoLivro = new Livro(livroDTO, autor);
                     return livroRepository.save(novoLivro);
